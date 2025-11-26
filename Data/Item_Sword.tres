@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=4 format=3 uid="uid://d2v0117u777mv"]
+
+[ext_resource type="Script" uid="uid://dsefnpf0rxfxu" path="res://Model/Weapon.gd" id="1_e7at0"]
+[ext_resource type="PackedScene" uid="uid://dr4gcsas2bys" path="res://Objects/Weapons/Swort1_lp.tscn" id="1_mv1gi"]
+[ext_resource type="Texture2D" uid="uid://bkjnbjltx6mxw" path="res://Objects/Icons/Flaticon_GoodWare_blade.png" id="1_rg3b7"]
+
+[resource]
+script = ExtResource("1_e7at0")
+idle_animation = "1hand_sword_idle"
+attackAnimations = Array[String](["1hand_sword_slash1", "1hand_sword_slash2"])
+name = "Sword"
+scene = ExtResource("1_mv1gi")
+icon = ExtResource("1_rg3b7")
+metadata/_custom_type_script = "uid://dsefnpf0rxfxu"

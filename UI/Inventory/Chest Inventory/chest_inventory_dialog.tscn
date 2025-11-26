@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://cuxv6f0d1jowy"]
+
+[ext_resource type="Script" uid="uid://dch7w82g13oe8" path="res://UI/Inventory/Chest Inventory/chest_inventory_dialog.gd" id="1_7she5"]
+[ext_resource type="PackedScene" uid="uid://6pstfiwtvilw" path="res://UI/Inventory/item_slot.tscn" id="2_be3y6"]
+
+[node name="ChestInventoryDialog" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7she5")
+slotScene = ExtResource("2_be3y6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Treasure Chest"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 500)
+layout_mode = 2
+columns = 5
+
+[node name="Panel" type="Panel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="TakeAllButton" type="Button" parent="VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -33.0
+offset_top = -56.0
+offset_right = 36.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(2, 2)
+pivot_offset = Vector2(34.5, 15.5)
+text = "Take All"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Panel/TakeAllButton" to="." method="_on_take_all_button_pressed"]

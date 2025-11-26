@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=4 format=3 uid="uid://ct37tdr51xebv"]
+
+[ext_resource type="Script" uid="uid://dsefnpf0rxfxu" path="res://Model/Weapon.gd" id="1_0hht3"]
+[ext_resource type="Texture2D" uid="uid://bgnj3doj8o1li" path="res://Objects/Icons/Flaticon_GoodWare_shotgun.png" id="1_fej88"]
+[ext_resource type="PackedScene" uid="uid://dix8t0ro1kvka" path="res://Objects/Weapons/Musket1_lp.tscn" id="2_armu1"]
+
+[resource]
+script = ExtResource("1_0hht3")
+name = "Musket"
+scene = ExtResource("2_armu1")
+icon = ExtResource("1_fej88")
+metadata/_custom_type_script = "uid://dsefnpf0rxfxu"
