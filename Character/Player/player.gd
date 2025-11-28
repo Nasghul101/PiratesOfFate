@@ -16,34 +16,44 @@ extends CharacterBody3D
 var cameraInputDirection := Vector2.ZERO
 var lastMovementDirection := Vector3.BACK
 var gravity := -9.81
-enum {IDLE,WALK,JUMP,ATTACK}
+enum {IDLE,WALK,JUMP,ATTACK1,ATTACK2,ATTACK3}
 var inventory:Inventory = Inventory.new()
 
 #AttackComboImplementation
 var equippedWeapon: Weapon
-var combo_index: int = 0
-var can_continue_combo: bool = false
-var is_attacking: bool = false
-
+var comboIndex: int = 0
+var canContinueCombo: bool = false
+var isAttacking: bool = false
+var maxComboAttacks: int
 
 @onready var cameraPivot: Node3D = %Camera_Pivot
 @onready var camera: Camera3D = %Camera3D
-@onready var anim_tree : AnimationTree = %AnimationTree
+@onready var animTree : AnimationTree = %AnimationTree
+@onready var weaponAttachement : Node3D = %weapon_pos_offset
 
 func _ready() -> void:
     inventory.add_item(startWeapon)
     CustomSignalBus.connect("update_player_inventory", update_player_inventory)
-    equippedWeapon = startWeapon
-
-func _physics_process(delta: float) -> void:
     
-    #Camera Controls
+    #needs to be changed when implementing the equipment dialog
+    equippedWeapon = startWeapon
+    animTree.apply_weapon_animation_set(startWeapon)
+    setup_weapon_combo(startWeapon)
+    
+    
+func _physics_process(delta: float) -> void:
+
+    # -----------------------------#
+    #       Camera controls        #
+    # -----------------------------#
     cameraPivot.rotation.x += cameraInputDirection.y * delta
     cameraPivot.rotation.x = clamp(cameraPivot.rotation.x, -PI / 6.0, PI / 3.0)
     cameraPivot.rotation.y -= cameraInputDirection.x * delta
     cameraInputDirection = Vector2.ZERO
-    
-    # Get the input direction and handle the movement/deceleration.
+
+    # -----------------------------#
+    #        Movement input        #
+    # -----------------------------#
     var inputDir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
     var forward := camera.global_basis.z
     var right := camera.global_basis.x
@@ -52,30 +62,53 @@ func _physics_process(delta: float) -> void:
     moveDirection.y = 0.0
     moveDirection = moveDirection.normalized()
     
-    var velocityY := velocity.y
+    # -----------------------------#
+    # BLOCK MOVEMENT DURING ATTACK #
+    # -----------------------------#
+    if isAttacking:
+        moveDirection = Vector3.ZERO   ### NEW (no movement)
+        inputDir = Vector2.ZERO       ### NEW (no rotation influence)
+
+    # -----------------------------#
+    #       Velocity Handling      #
+    # -----------------------------#
+    var velocityY : float = velocity.y
     velocity.y = 0.0
     velocity = velocity.move_toward(moveDirection * moveSpeed, acceleration + delta)
     velocity.y = velocityY + gravity * delta
-    
-    var isStartingJump := Input.is_action_just_pressed("jump") and is_on_floor()
+
+    # -----------------------------#
+    #   BLOCK JUMP DURING ATTACK   #
+    # -----------------------------#
+    var isStartingJump : bool = Input.is_action_just_pressed("jump") and is_on_floor() and not isAttacking
     if isStartingJump:
         velocity.y += jumpImpulse
-    
+
     move_and_slide()
     
+    # -----------------------------#
+    #           Rotation           #
+    # -----------------------------#
     if moveDirection.length() > 0.2:
         lastMovementDirection = moveDirection
+
     var targetAngle := Vector3.BACK.signed_angle_to(lastMovementDirection, Vector3.UP)
-    playerBody.global_rotation.y = lerp_angle(playerBody.rotation.y, targetAngle, rotationSpeed * delta)
-    
-    if not is_on_floor():
+
+    if not isAttacking:
+        playerBody.global_rotation.y = lerp_angle(playerBody.rotation.y, targetAngle, rotationSpeed * delta)
+
+    # -----------------------------#
+    #       Animation State        #
+    # -----------------------------#
+    if not isAttacking:
+        if not is_on_floor():
             set_current_anim(JUMP)
-    elif is_on_floor():
-        var groundSpeed := velocity.length()
-        if groundSpeed > 0.0:
-            set_current_anim(WALK)
-        else:
-            set_current_anim(IDLE)
+        elif is_on_floor():
+            var groundSpeed := velocity.length()
+            if groundSpeed > 0.0:
+                set_current_anim(WALK)
+            else:
+                set_current_anim(IDLE)
 
     
 func _unhandled_input(event: InputEvent) -> void:
@@ -86,6 +119,7 @@ func _unhandled_input(event: InputEvent) -> void:
     if isCameraMotion:
         cameraInputDirection = event.screen_relative * mouseSensitivity
 
+#Inputs
 func _input(event: InputEvent) -> void:
     if event.is_action_pressed("left_click"):
         Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -93,19 +127,26 @@ func _input(event: InputEvent) -> void:
         Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     if event.is_action_pressed("inventory"):
         CustomSignalBus.inventory_opened.emit(inventory)
-    if event.is_action_pressed("left_click") && Input.MOUSE_MODE_CAPTURED:
-        pass
+    if event.is_action_pressed("left_click") && Input.MOUSE_MODE_CAPTURED && is_on_floor():
+        handle_attack_input()
 
-        
+#Animation setting
 func set_current_anim(state : int) -> void:
     match state:
         IDLE:
-            anim_tree.set_current_anim(IDLE)
+            animTree.set_current_anim(IDLE)
         WALK:            
-            anim_tree.set_current_anim(WALK)
+            animTree.set_current_anim(WALK)
         JUMP:
-            anim_tree.set_current_anim(JUMP)
-        
+            animTree.set_current_anim(JUMP)
+        ATTACK1:
+            animTree.set_current_anim(ATTACK1)
+        ATTACK2:
+            animTree.set_current_anim(ATTACK2)
+        ATTACK3:
+            animTree.set_current_anim(ATTACK3)
+
+
 #function to add or remove items from the player inventory
 #connected to the Update_Player_Invetory signal
 func update_player_inventory(item:Item, addItem:bool) -> void:
@@ -115,69 +156,67 @@ func update_player_inventory(item:Item, addItem:bool) -> void:
         inventory.remove_item(item)
         
 
-#-----------------------------#
-#  Attack and Combo Handling  #
-#-----------------------------#
+    # -----------------------------#
+    #  Attack and Combo Handling   #
+    # -----------------------------#
 
-#func handle_attack_input() -> void:
-    #if is_attacking:
-        ## Already attacking → only continue if allowed
-        #if can_continue_combo:
-            #continue_combo()
-        ## Else ignore the press
-        #return
-#
-    ## Not attacking → start from first attack
-    #start_combo()
-#
-#func start_combo() -> void:
-    #if equippedWeapon == null:
-        #return
-#
-    #combo_index = 0
-    #play_combo_animation()
-    #is_attacking = true
-#
-#
-#func continue_combo() -> void:
-    ## Advance combo only if next animation exists
-    #combo_index += 1
-#
-    #if combo_index >= equippedWeapon.attack_animations.size():
-        ## Combo finished; reset
-        #combo_index = 0
-        #return
-#
-    ## Play next attack animation
-    #can_continue_combo = false
-    #play_combo_animation()
-#
-#func play_combo_animation() -> void:
-    ## Get animation name from weapon resource
-    #var anim_name = equippedWeapon.attackAnimations[combo_index]
-#
-    ## Assign this animation to correct BlendTree input
-    #anim_tree.set("parameters/attack" + str(combo_index + 1) + "/animation", anim_name)
-#
-    ## Select the correct attack animation in BlendTree
-    #anim_tree.set("parameters/attack_combo_selector/blend_position", combo_index)
-#
-#func on_animation_finished(anim_name: String) -> void:
-    ## If the finished animation isn’t part of the combo → ignore
-    #if not is_attacking:
-        #return
-#
-    ## Combo ended without continuing
-    #reset_combo()
-#
-#
-#func reset_combo() -> void:
-    #is_attacking = false
-    #can_continue_combo = false
-    #combo_index = 0
-#
-#
-## Called from AnimationPlayer keyframe (your method)
-#func allow_next_attack_window() -> void:
-    ## This is your "can attack" timeframe
-    #can_continue_combo = true
+# Called when attack button is pressed
+func handle_attack_input() -> void:
+    if canContinueCombo:
+        continue_combo()
+
+    if not isAttacking:
+        start_combo()
+        return
+
+func start_combo() -> void:
+    comboIndex = 0
+    isAttacking = true
+    canContinueCombo = false
+
+    # Play the first attack
+    set_current_anim(ATTACK1)
+
+
+func continue_combo() -> void:
+    comboIndex += 1
+
+    if comboIndex >= maxComboAttacks:
+        reset_combo()
+        return
+
+    canContinueCombo = false
+
+    # Dynamically determine the ATTACK state to play
+    match comboIndex:
+        1:
+            set_current_anim(ATTACK2)
+        2:
+            set_current_anim(ATTACK3)
+        _:
+            # For more than 3 attacks, dynamically call set_current_anim with integers above 3
+            set_current_anim(comboIndex + 1)  # assumes your set_current_anim can handle >3 if needed
+
+
+# Called by AnimationPlayer when attack animation finishes
+func on_animation_finished() -> void:
+    if not isAttacking:
+        return
+
+    reset_combo()
+
+func reset_combo() -> void:
+    isAttacking = false
+    canContinueCombo = false
+    comboIndex = 0
+    animTree.set("parameters/attack/transition_request", "no_attack")
+
+# Called by AnimationPlayer keyframes to open/close combo window
+func set_canContinueCombo(value: bool) -> void:
+    canContinueCombo = value
+
+# Call this whenever you equip a weapon
+func setup_weapon_combo(weapon: Weapon) -> void:
+    maxComboAttacks = weapon.attackAnimations.size()
+    print("Max Combo Attacks: " + str(maxComboAttacks))
+    reset_combo()
