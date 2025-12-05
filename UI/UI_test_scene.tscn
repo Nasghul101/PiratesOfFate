@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://naljqsayj0cf"]
+
+[ext_resource type="PackedScene" uid="uid://bj38i6g6ph5fj" path="res://UI/Inventory/Player Inventory/player_inventory_dialog.tscn" id="1_xwwe1"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerInventoryDialog" parent="." instance=ExtResource("1_xwwe1")]
+layout_mode = 1
+offset_left = -568.0
+offset_top = 8.0
+offset_right = -302.0
+offset_bottom = -231.0
+
+[node name="PlayerInventoryDialog2" parent="." instance=ExtResource("1_xwwe1")]
+layout_mode = 1
+offset_left = -32.0
+offset_top = 8.0
+offset_right = 234.0
+offset_bottom = -231.0

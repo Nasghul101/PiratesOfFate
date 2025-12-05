@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dr41vuu2q38cq"]
+
+[node name="DropCell" type="Button"]
+custom_minimum_size = Vector2(50, 50)
+offset_right = 8.0
+offset_bottom = 8.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+expand_icon = true

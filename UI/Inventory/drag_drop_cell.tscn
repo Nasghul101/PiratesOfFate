@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://0pgxo3fupy5c"]
+
+[ext_resource type="Script" uid="uid://uxfn5bek12y2" path="res://UI/Inventory/drag_cell.gd" id="1_hk7sm"]
+
+[node name="DragDropCell" type="Button"]
+custom_minimum_size = Vector2(50, 50)
+offset_right = 8.0
+offset_bottom = 8.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+expand_icon = true
+script = ExtResource("1_hk7sm")
