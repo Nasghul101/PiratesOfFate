@@ -118,8 +118,10 @@ func _unhandled_input(event: InputEvent) -> void:
     )
     if isCameraMotion:
         cameraInputDirection = event.screen_relative * mouseSensitivity
-
-#Inputs
+        
+    # -----------------------------#
+    #            Inputs            #
+    # -----------------------------#
 func _input(event: InputEvent) -> void:
     if event.is_action_pressed("left_click"):
         Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -130,7 +132,9 @@ func _input(event: InputEvent) -> void:
     if event.is_action_pressed("left_click") && Input.MOUSE_MODE_CAPTURED && is_on_floor():
         handle_attack_input()
 
-#Animation setting
+    # -----------------------------#
+    #      Animation Setting       #
+    # -----------------------------#
 func set_current_anim(state : int) -> void:
     match state:
         IDLE:

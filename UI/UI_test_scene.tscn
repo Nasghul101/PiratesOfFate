@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://naljqsayj0cf"]
+[gd_scene load_steps=6 format=3 uid="uid://naljqsayj0cf"]
 
 [ext_resource type="PackedScene" uid="uid://bj38i6g6ph5fj" path="res://UI/Inventory/Player Inventory/player_inventory_dialog.tscn" id="1_xwwe1"]
+[ext_resource type="Script" uid="uid://1ufcx0niam5r" path="res://UI/Test_Scene_Test_Button.gd" id="2_of3p4"]
+[ext_resource type="Script" uid="uid://dekltjyhgqgcf" path="res://Model/Item.gd" id="3_5jbiy"]
+[ext_resource type="Resource" uid="uid://d2v0117u777mv" path="res://Data/Item_Sword.tres" id="4_k3wb3"]
+[ext_resource type="Resource" uid="uid://ct37tdr51xebv" path="res://Data/Item_Musket.tres" id="5_btplp"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -23,3 +27,15 @@ offset_left = -32.0
 offset_top = 8.0
 offset_right = 234.0
 offset_bottom = -231.0
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 367.0
+offset_top = 47.0
+offset_right = 454.0
+offset_bottom = 78.0
+text = "Add Items"
+script = ExtResource("2_of3p4")
+items = Array[ExtResource("3_5jbiy")]([ExtResource("4_k3wb3"), ExtResource("5_btplp")])
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

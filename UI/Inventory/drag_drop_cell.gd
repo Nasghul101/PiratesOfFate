@@ -1,6 +1,16 @@
 class_name DragDropCell
 extends Button
 
+var cellData: Item
+
+func add_data(item: Item) -> void:
+    cellData = item
+    icon = item.icon
+    
+func remove_data() -> void:
+    cellData = null
+    icon = null
+
 func _get_drag_data(_pos: Vector2) -> Variant:
     if not icon:
         return null

@@ -1,6 +1,6 @@
 extends Control
 
-@export var grid: GridContainer
+signal drop_received(data: Variant)
 
 #disable by default 
 func _ready() -> void:
@@ -24,4 +24,4 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 # When dropping
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
     visible = false
-    grid.receive_external_drop(data)
+    drop_received.emit(data)

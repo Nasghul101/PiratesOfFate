@@ -3,43 +3,41 @@ extends GridContainer
 
 @export var cell_scene: PackedScene   # assign drag_drop_cell.tscn in Inspector
 
-var cells: Array[DragDropCell] = []   # flat array instead of 2D (much easier)
-
-func _ready() -> void:
-    # Convert existing children into cells array and connect their drag_started
-    for child in get_children():
-        if child is DragDropCell:
-            cells.append(child)
-
-func receive_external_drop(data: DragDropCell) -> void:
-    if data == null:
+func receive_external_drop(dragDropCell: DragDropCell) -> void:
+    if dragDropCell == null:
         return
 
-    var icon_tex := data.icon
-    if icon_tex == null:
+    var cellData : Item = dragDropCell.cellData
+    if cellData == null:
         return
 
     # remove from old slot
-    data.icon = null
+    dragDropCell.remove_data()
+    add_new_item(cellData)
 
+func add_new_item(cellData: Item) ->void:
+    
     # find free cell
-    var cell := get_first_empty_cell()
-    if cell == null:
+    var emptyCell := get_first_empty_cell()
+    if emptyCell == null:
         add_new_row()
-        cell = get_first_empty_cell()
+        emptyCell = get_first_empty_cell()
 
     # drop item
-    cell.icon = icon_tex
-
+    emptyCell.add_data(cellData)
 
 func get_first_empty_cell() -> DragDropCell:
-    for cell in cells:
-        if cell.icon == null:
-            return cell
+    for cell in get_children():
+        if cell:
+            if cell.icon == null:
+                return cell
     return null
 
 func add_new_row() -> void:
     for i in range(columns):
         var new_cell: DragDropCell = cell_scene.instantiate()
         add_child(new_cell)
-        cells.append(new_cell)
+
+func clear() -> void:
+    for child in get_children():
+        child.queue_free()

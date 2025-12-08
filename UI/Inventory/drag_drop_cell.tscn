@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://0pgxo3fupy5c"]
 
-[ext_resource type="Script" uid="uid://uxfn5bek12y2" path="res://UI/Inventory/drag_cell.gd" id="1_hk7sm"]
+[ext_resource type="Script" uid="uid://uxfn5bek12y2" path="res://UI/Inventory/drag_drop_cell.gd" id="1_hk7sm"]
 
 [node name="DragDropCell" type="Button"]
 custom_minimum_size = Vector2(50, 50)
