@@ -45,25 +45,25 @@ func update_anim_tree() -> void:
     self["parameters/Jump/blend_amount"] = jumpVal
 
 func apply_weapon_animation_set(weapon: Weapon) -> void:
-    var tree_root: AnimationNodeBlendTree = self.get("tree_root")
+    var animTreeRoot: AnimationNodeBlendTree = self.get("tree_root")
 
     # --- IDLE ---
-    if weapon.idle_animation != "" and tree_root.has_node("Anim_Idle"):
-        var idle_node: AnimationNode = tree_root.get_node("Anim_Idle")
+    if weapon.idle_animation != "" and animTreeRoot.has_node("Anim_Idle"):
+        var idle_node: AnimationNode = animTreeRoot.get_node("Anim_Idle")
         if anim_player_node.has_animation(weapon.idle_animation):
             idle_node.animation = weapon.idle_animation
             print("Idle: " + idle_node.animation)
 
     # --- WALK ---
-    if weapon.walk_animation != "" and tree_root.has_node("Anim_Walking"):
-        var walk_node: AnimationNode = tree_root.get_node("Anim_Walking")
+    if weapon.walk_animation != "" and animTreeRoot.has_node("Anim_Walking"):
+        var walk_node: AnimationNode = animTreeRoot.get_node("Anim_Walking")
         if anim_player_node.has_animation(weapon.walk_animation):
             walk_node.animation = weapon.walk_animation
             print("walk: " + walk_node.animation)
 
     # --- JUMP ---
-    if weapon.jump_animation != "" and tree_root.has_node("Anim_Jump"):
-        var jump_node: AnimationNode = tree_root.get_node("Anim_Jump")
+    if weapon.jump_animation != "" and animTreeRoot.has_node("Anim_Jump"):
+        var jump_node: AnimationNode = animTreeRoot.get_node("Anim_Jump")
         if anim_player_node.has_animation(weapon.jump_animation):
             jump_node.animation = weapon.jump_animation
             print("Jump: " + jump_node.animation)
@@ -77,10 +77,10 @@ func apply_weapon_animation_set(weapon: Weapon) -> void:
 
         var node_name: String = "Anim_Attack" + str(i + 1)
 
-        if not tree_root.has_node(node_name):
+        if not animTreeRoot.has_node(node_name):
             continue  # no such attack slot → ignore safely
 
         if anim_player_node.has_animation(anim_name):
-            var attack_node: AnimationNode = tree_root.get_node(node_name)
+            var attack_node: AnimationNode = animTreeRoot.get_node(node_name)
             attack_node.animation = anim_name
             print("attack"+ str(i + 1) + ": " + attack_node.animation)

@@ -1,12 +1,14 @@
-[gd_scene load_steps=39 format=4 uid="uid://cswfbp3woa506"]
+[gd_scene load_steps=41 format=4 uid="uid://cswfbp3woa506"]
 
 [ext_resource type="PackedScene" uid="uid://bf7a2fw3stcw5" path="res://Imports/Test_Level/test_level.gltf" id="1_iti4p"]
 [ext_resource type="PackedScene" uid="uid://cqjttcc6otisu" path="res://Objects/Chests/Treasure_Chest.tscn" id="3_bl5l7"]
 [ext_resource type="Script" uid="uid://dsefnpf0rxfxu" path="res://Model/Weapon.gd" id="4_fir1u"]
 [ext_resource type="Resource" uid="uid://d2v0117u777mv" path="res://Data/Item_Sword.tres" id="5_7u625"]
 [ext_resource type="PackedScene" uid="uid://cuxv6f0d1jowy" path="res://UI/Inventory/Chest Inventory/chest_inventory_dialog.tscn" id="6_6hp7l"]
+[ext_resource type="Script" uid="uid://kcjg10wr2iwp" path="res://UI/gui.gd" id="6_fyu2r"]
 [ext_resource type="PackedScene" uid="uid://bj38i6g6ph5fj" path="res://UI/Inventory/Player Inventory/player_inventory_dialog.tscn" id="7_dayna"]
 [ext_resource type="PackedScene" uid="uid://66dydkrp5twc" path="res://Character/Player/Player.tscn" id="7_oh37s"]
+[ext_resource type="PackedScene" uid="uid://bdqp61h4c7mpm" path="res://UI/Escape_Menu.tscn" id="9_ejxrc"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dtjkg"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -468,6 +470,7 @@ items = Array[ExtResource("4_fir1u")]([ExtResource("5_7u625")])
 [node name="NewPlayer" parent="." instance=ExtResource("7_oh37s")]
 
 [node name="GUI" type="CanvasLayer" parent="."]
+script = ExtResource("6_fyu2r")
 
 [node name="ChestInventoryDialog" parent="GUI" instance=ExtResource("6_6hp7l")]
 visible = false
@@ -478,4 +481,8 @@ offset_bottom = -105.0
 size_flags_horizontal = 0
 
 [node name="PlayerInventoryDialog" parent="GUI" instance=ExtResource("7_dayna")]
+visible = false
+
+[node name="EscapeMenu" parent="GUI" instance=ExtResource("9_ejxrc")]
+unique_name_in_owner = true
 visible = false

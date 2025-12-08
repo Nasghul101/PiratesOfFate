@@ -123,10 +123,6 @@ func _unhandled_input(event: InputEvent) -> void:
     #            Inputs            #
     # -----------------------------#
 func _input(event: InputEvent) -> void:
-    if event.is_action_pressed("left_click"):
-        Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-    if event.is_action_pressed("ui_cancel"):
-        Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     if event.is_action_pressed("inventory"):
         CustomSignalBus.inventory_opened.emit(inventory)
     if event.is_action_pressed("left_click") && Input.MOUSE_MODE_CAPTURED && is_on_floor():
