@@ -474,10 +474,14 @@ script = ExtResource("6_fyu2r")
 
 [node name="ChestInventoryDialog" parent="GUI" instance=ExtResource("6_6hp7l")]
 visible = false
-offset_left = 105.0
-offset_top = 105.0
-offset_right = -105.0
-offset_bottom = -105.0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 0.0
+offset_right = 266.0
+offset_bottom = 282.0
+grow_horizontal = 1
+grow_vertical = 1
 size_flags_horizontal = 0
 
 [node name="PlayerInventoryDialog" parent="GUI" instance=ExtResource("7_dayna")]

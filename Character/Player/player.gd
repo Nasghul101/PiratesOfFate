@@ -17,9 +17,12 @@ var cameraInputDirection := Vector2.ZERO
 var lastMovementDirection := Vector3.BACK
 var gravity := -9.81
 enum {IDLE,WALK,JUMP,ATTACK1,ATTACK2,ATTACK3}
-var inventory:Inventory = Inventory.new()
 
-#AttackComboImplementation
+# Inventory/Equipment
+var inventory:Inventory = Inventory.new()
+var equipment:Equipment = Equipment.new()
+
+# Attack/Combo Implementation
 var equippedWeapon: Weapon
 var comboIndex: int = 0
 var canContinueCombo: bool = false
@@ -34,12 +37,13 @@ var maxComboAttacks: int
 func _ready() -> void:
     inventory.add_item(startWeapon)
     CustomSignalBus.connect("update_player_inventory", update_player_inventory)
+    CustomSignalBus.connect("equipped", on_equipped)
     
     #needs to be changed when implementing the equipment dialog
     equippedWeapon = startWeapon
     animTree.apply_weapon_animation_set(startWeapon)
     setup_weapon_combo(startWeapon)
-    
+    print("startWeapon equipmentSlot: " + startWeapon.equipmentSlot)
     
 func _physics_process(delta: float) -> void:
 
@@ -127,6 +131,8 @@ func _input(event: InputEvent) -> void:
         CustomSignalBus.inventory_opened.emit(inventory)
     if event.is_action_pressed("left_click") && Input.MOUSE_MODE_CAPTURED && is_on_floor():
         handle_attack_input()
+    if event.is_action_pressed("right_click"):
+        equipment.equip(startWeapon)
 
     # -----------------------------#
     #      Animation Setting       #
@@ -146,6 +152,9 @@ func set_current_anim(state : int) -> void:
         ATTACK3:
             animTree.set_current_anim(ATTACK3)
 
+    # -----------------------------#
+    #        Item Management       #
+    # -----------------------------#
 
 #function to add or remove items from the player inventory
 #connected to the Update_Player_Invetory signal
@@ -155,6 +164,18 @@ func update_player_inventory(item:Item, addItem:bool) -> void:
     else:
         inventory.remove_item(item)
         
+
+func on_equipped(item: Variant, slot: Equipment.Slot) -> void:
+    update_player_inventory(item, false)
+    print("Equipment: " + str(equipment.get_equipped_items()))
+    print("Inventory: " + str(inventory.get_items()))
+    
+
+func on_unequipped(item: Variant, slot: Equipment.Slot) -> void:
+    update_player_inventory(item, true)
+    print("Equipment: " + str(equipment.get_equipped_items()))
+    print("Inventory: " + str(inventory.get_items()))
+
 
     # -----------------------------#
     #  Attack and Combo Handling   #

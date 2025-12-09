@@ -1,16 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://cuxv6f0d1jowy"]
+[gd_scene load_steps=5 format=3 uid="uid://cuxv6f0d1jowy"]
 
 [ext_resource type="Script" uid="uid://dch7w82g13oe8" path="res://UI/Inventory/Chest Inventory/chest_inventory_dialog.gd" id="1_7she5"]
-[ext_resource type="PackedScene" uid="uid://6pstfiwtvilw" path="res://UI/Inventory/item_slot.tscn" id="2_be3y6"]
+[ext_resource type="Script" uid="uid://6qtl21jsqjm6" path="res://UI/Inventory/drag_drop_grid.gd" id="2_qiu63"]
+[ext_resource type="PackedScene" uid="uid://0pgxo3fupy5c" path="res://UI/Inventory/drag_drop_cell.tscn" id="3_qiu63"]
+[ext_resource type="PackedScene" uid="uid://qtbc5ermv8t6" path="res://UI/Inventory/drop_overlay.tscn" id="4_6024w"]
 
 [node name="ChestInventoryDialog" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 443.0
+offset_right = -443.0
+offset_bottom = -366.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7she5")
-slotScene = ExtResource("2_be3y6")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -30,31 +34,77 @@ text = "X"
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 columns = 5
+script = ExtResource("2_qiu63")
+cell_scene = ExtResource("3_qiu63")
 
-[node name="Panel" type="Panel" parent="VBoxContainer"]
+[node name="DragDropCell" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
 
-[node name="TakeAllButton" type="Button" parent="VBoxContainer/Panel"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -33.0
-offset_top = -56.0
-offset_right = 36.0
-offset_bottom = -25.0
-grow_horizontal = 2
-grow_vertical = 0
-scale = Vector2(2, 2)
-pivot_offset = Vector2(34.5, 15.5)
+[node name="DragDropCell2" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell3" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell4" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell5" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell6" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell7" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell8" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell9" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell10" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell11" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell12" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell13" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell14" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell15" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell16" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell17" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell18" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell19" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="DragDropCell20" parent="VBoxContainer/GridContainer" instance=ExtResource("3_qiu63")]
+layout_mode = 2
+
+[node name="TakeAllButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
 text = "Take All"
 
+[node name="DropOverlay" parent="." instance=ExtResource("4_6024w")]
+layout_mode = 2
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/Panel/TakeAllButton" to="." method="_on_take_all_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TakeAllButton" to="." method="_on_take_all_button_pressed"]

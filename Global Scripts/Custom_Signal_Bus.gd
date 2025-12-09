@@ -14,3 +14,7 @@ signal drag_started(dragDropCell: DragDropCell)
 
 #emiited when a cell gets dropped
 signal drag_released(dragDropCell: DragDropCell)
+
+signal equipped(item: Variant, slot: Equipment.Slot)
+
+signal unequipped(item: Variant, slot:  Equipment.Slot)

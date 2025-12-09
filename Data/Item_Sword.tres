@@ -6,8 +6,8 @@
 
 [resource]
 script = ExtResource("1_e7at0")
-idle_animation = "1hand_sword_idle"
 attackAnimations = Array[String](["1hand_sword_slash1", "1hand_sword_slash2"])
+equipmentSlot = "HAND"
 name = "Sword"
 scene = ExtResource("1_mv1gi")
 icon = ExtResource("1_rg3b7")

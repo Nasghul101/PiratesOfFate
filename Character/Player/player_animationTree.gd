@@ -5,8 +5,8 @@ var walkVal : float = 0
 var jumpVal : float = 0
 var currentAnim : int = IDLE
 
-@export var anim_blend_speed : float = 15
-@export var anim_player_node: AnimationPlayer
+@export var animBlendSpeed : float = 15
+@export var animPlayerNode: AnimationPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -22,16 +22,16 @@ func set_current_anim(anim: int) -> void:
 func handle_animations(delta:float) -> void:
     match currentAnim:
         IDLE:
-            walkVal = lerpf(walkVal,0,anim_blend_speed*delta)
-            jumpVal = lerpf(jumpVal,0,anim_blend_speed*delta)
+            walkVal = lerpf(walkVal,0,animBlendSpeed*delta)
+            jumpVal = lerpf(jumpVal,0,animBlendSpeed*delta)
             
             
         WALK:
-            walkVal = lerpf(walkVal,1,anim_blend_speed*delta)
-            jumpVal = lerpf(jumpVal,0,anim_blend_speed*delta)
+            walkVal = lerpf(walkVal,1,animBlendSpeed*delta)
+            jumpVal = lerpf(jumpVal,0,animBlendSpeed*delta)
         JUMP:
-            walkVal = lerpf(walkVal,0,anim_blend_speed*delta)            
-            jumpVal = lerpf(jumpVal,1,anim_blend_speed*delta)
+            walkVal = lerpf(walkVal,0,animBlendSpeed*delta)            
+            jumpVal = lerpf(jumpVal,1,animBlendSpeed*delta)
         ATTACK1:
             self.set("parameters/attack/transition_request", "attack1")
         ATTACK2:
@@ -48,39 +48,39 @@ func apply_weapon_animation_set(weapon: Weapon) -> void:
     var animTreeRoot: AnimationNodeBlendTree = self.get("tree_root")
 
     # --- IDLE ---
-    if weapon.idle_animation != "" and animTreeRoot.has_node("Anim_Idle"):
+    if weapon.idleAnimation != "" and animTreeRoot.has_node("Anim_Idle"):
         var idle_node: AnimationNode = animTreeRoot.get_node("Anim_Idle")
-        if anim_player_node.has_animation(weapon.idle_animation):
-            idle_node.animation = weapon.idle_animation
+        if animPlayerNode.has_animation(weapon.idleAnimation):
+            idle_node.animation = weapon.idleAnimation
             print("Idle: " + idle_node.animation)
 
     # --- WALK ---
-    if weapon.walk_animation != "" and animTreeRoot.has_node("Anim_Walking"):
+    if weapon.walkAnimation != "" and animTreeRoot.has_node("Anim_Walking"):
         var walk_node: AnimationNode = animTreeRoot.get_node("Anim_Walking")
-        if anim_player_node.has_animation(weapon.walk_animation):
-            walk_node.animation = weapon.walk_animation
+        if animPlayerNode.has_animation(weapon.walkAnimation):
+            walk_node.animation = weapon.walkAnimation
             print("walk: " + walk_node.animation)
 
     # --- JUMP ---
-    if weapon.jump_animation != "" and animTreeRoot.has_node("Anim_Jump"):
+    if weapon.jumpAnimation != "" and animTreeRoot.has_node("Anim_Jump"):
         var jump_node: AnimationNode = animTreeRoot.get_node("Anim_Jump")
-        if anim_player_node.has_animation(weapon.jump_animation):
-            jump_node.animation = weapon.jump_animation
+        if animPlayerNode.has_animation(weapon.jumpAnimation):
+            jump_node.animation = weapon.jumpAnimation
             print("Jump: " + jump_node.animation)
 
     # --- ATTACKS ---
     for i in weapon.attackAnimations.size():
-        var anim_name: String = weapon.attackAnimations[i]
+        var animName: String = weapon.attackAnimations[i]
 
-        if anim_name == "":
+        if animName == "":
             continue  # skip empty entries
 
-        var node_name: String = "Anim_Attack" + str(i + 1)
+        var nodeName: String = "Anim_Attack" + str(i + 1)
 
-        if not animTreeRoot.has_node(node_name):
+        if not animTreeRoot.has_node(nodeName):
             continue  # no such attack slot → ignore safely
 
-        if anim_player_node.has_animation(anim_name):
-            var attack_node: AnimationNode = animTreeRoot.get_node(node_name)
-            attack_node.animation = anim_name
-            print("attack"+ str(i + 1) + ": " + attack_node.animation)
+        if animPlayerNode.has_animation(animName):
+            var attackNode: AnimationNode = animTreeRoot.get_node(nodeName)
+            attackNode.animation = animName
+            print("attack"+ str(i + 1) + ": " + attackNode.animation)

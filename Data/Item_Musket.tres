@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_0hht3")
+equipmentSlot = "HAND"
 name = "Musket"
 scene = ExtResource("2_armu1")
 icon = ExtResource("1_fej88")

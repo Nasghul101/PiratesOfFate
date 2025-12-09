@@ -1,8 +1,6 @@
 class_name ChestInventoryDialog
 extends PanelContainer
 
-@export var slotScene:PackedScene
-
 var currentChest:TreasureChest
 var temporalInventory:Inventory
 
@@ -16,13 +14,16 @@ func open(chest:TreasureChest, inventory:Inventory) -> void:
     show()
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     
-    for child in gridContainer.get_children():
-        child.queue_free()
+    gridContainer.clear()
+    
+    #needs to wait 2 frames for the gridContainer to queue_free all children for consistency
+    await get_tree().process_frame
+    await get_tree().process_frame
+    
     
     for item in inventory.get_items():
-        var slot := slotScene.instantiate()
-        gridContainer.add_child(slot)
-        slot.display(item)
+        gridContainer.add_new_item(item)
+
     
     currentChest = chest
 
@@ -38,3 +39,5 @@ func _on_take_all_button_pressed() -> void:
             currentChest.inventory.remove_item(item)
             CustomSignalBus.update_player_inventory.emit(item, true)
         currentChest.looted = true
+    Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+    
