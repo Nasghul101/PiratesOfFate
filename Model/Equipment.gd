@@ -25,33 +25,41 @@ var slots : Dictionary[Slot, Variant] = {
     Slot.ACCESSORY: null
 }
 
-func equip(item: Variant) -> bool:
+func equip(item: Variant) -> void:
     if item == null:
-        return false
+        return
 
     # Only items with equipmentSlot can be equipped
     if not ("equipmentSlot" in item):
-        return false
+        return
 
-    var validSlot := _find_validSlot(item)
+    var validSlot := find_valid_slot(item)
     if validSlot == -1:
-        return false
+        return
 
-    return _equip_to_slot(item, validSlot)
+    equip_to_slot(item, validSlot)
 
 
-func equip_to_slot(item: Variant, slot: Slot) -> bool:
+func equip_to_slot(item: Variant, slot: Slot) -> void:
     if not slots.has(slot):
-        return false
+        return
 
     if not ("equipmentSlot" in item):
-        return false
+        return
 
     var itemSlot := slot_from_string(item.equipmentSlot)
     if itemSlot != slot:
-        return false
+        return
 
-    return _equip_to_slot(item, slot)
+    var oldItem: Variant = slots[slot]
+
+    # remove old item
+    if oldItem:
+        CustomSignalBus.emit_signal("unequipped", oldItem, slot)
+
+    # insert new item
+    slots[slot] = item
+    CustomSignalBus.emit_signal("equipped", item, slot)
 
 
 func unequip(slot: Slot) -> Variant:
@@ -82,7 +90,7 @@ func slot_from_string(slotName: String) -> int:
 
 
 # Find the one allowed slot for an item
-func _find_validSlot(item: Variant) -> int:
+func find_valid_slot(item: Variant) -> int:
     var slotName: Variant = item.equipmentSlot          # string, e.g. "HEAD"
     var slotEnum := slot_from_string(slotName) # int or -1
 
@@ -90,18 +98,3 @@ func _find_validSlot(item: Variant) -> int:
         return slotEnum
 
     return -1
-
-
-# Internal: Assign item to slot, signal events
-func _equip_to_slot(item: Variant, slot: Slot) -> bool:
-    var oldItem: Variant = slots[slot]
-
-    # remove old item
-    if oldItem:
-        CustomSignalBus.emit_signal("unequipped", oldItem, slot)
-
-    # insert new item
-    slots[slot] = item
-    CustomSignalBus.emit_signal("equipped", item, slot)
-
-    return true

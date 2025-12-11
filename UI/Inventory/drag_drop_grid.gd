@@ -3,6 +3,7 @@ extends GridContainer
 
 @export var cell_scene: PackedScene   # assign drag_drop_cell.tscn in Inspector
 
+
 func receive_external_drop(dragDropCell: DragDropCell) -> void:
     if dragDropCell == null:
         return

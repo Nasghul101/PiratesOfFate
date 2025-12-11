@@ -6,7 +6,19 @@ var inventory:Inventory = Inventory.new()
 func _ready() -> void:
     for i in items:
         inventory.add_item(i)
-
+    CustomSignalBus.connect("update_player_inventory", update_inventory)
 
 func _on_pressed() -> void:
     CustomSignalBus.inventory_opened.emit(inventory)
+
+func update_inventory(item:Item, addItem:bool) -> void:
+    if addItem:
+        inventory.add_item(item)
+        print("items added ")  
+        for i in inventory.get_items():
+            print(i.name)
+    else:
+        #inventory.remove_item(item)
+        print("items removed ")
+        for i in inventory.get_items():
+            print(i.name)
