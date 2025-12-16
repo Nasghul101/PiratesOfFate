@@ -1,18 +1,25 @@
 class_name DragDropCell
 extends Button
 
-var cellData: Item
+signal drag_started(cell: DragDropCell)
+signal drag_ended(cell: DragDropCell)
 
-func add_data(item: Item) -> void:
-    cellData = item
-    icon = item.icon
-    
-func remove_data() -> void:
-    cellData = null
+var cell_data: Item = null
+
+
+func set_item(item: Item) -> void:
+    cell_data = item
+    if item:
+        icon = item.icon
+
+
+func clear_item() -> void:
+    cell_data = null
     icon = null
 
+
 func _get_drag_data(_pos: Vector2) -> Variant:
-    if not icon:
+    if cell_data == null:
         return null
 
     var preview := TextureRect.new()
@@ -21,12 +28,10 @@ func _get_drag_data(_pos: Vector2) -> Variant:
     preview.scale = Vector2(0.1, 0.1)
     set_drag_preview(preview)
 
-    CustomSignalBus.emit_signal("drag_started", self)
+    drag_started.emit(self)
     return self
 
-#to check if the drag ended
-#https://www.reddit.com/r/godot/comments/17arb3h/how_to_detect_an_unsuccessful_drop_of_drag_data/
+
 func _notification(what: int) -> void:
-  if what == NOTIFICATION_DRAG_END:
-    # Drag failed
-    CustomSignalBus.emit_signal("drag_released", self)
+    if what == NOTIFICATION_DRAG_END:
+        drag_ended.emit(self)

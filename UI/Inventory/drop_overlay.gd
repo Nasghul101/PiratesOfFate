@@ -1,27 +1,26 @@
+class_name DropOverlay
 extends Control
 
-signal drop_received(data: Variant)
+signal drop_received(cell: DragDropCell)
 
-#disable by default 
 func _ready() -> void:
-    CustomSignalBus.connect("drag_started", on_drag_started)
-    CustomSignalBus.connect("drag_released", on_drag_released)
-    visible = false
+    CustomSignalBus.connect("drag_started", enable)
+    CustomSignalBus.connect("drag_released", disable)
 
-#enable if a cell is grapped
-func on_drag_started(_cell: DragDropCell) -> void:
+func enable() -> void:
     visible = true
 
-func on_drag_released(_cell: DragDropCell) -> void:
+
+func disable() -> void:
     visible = false
 
-# When dragging over overlay
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+
+func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
     if data is DragDropCell:
         return true
-    return false
+    else:
+        return false
 
-# When dropping
-func _drop_data(_at_position: Vector2, data: Variant) -> void:
-    visible = false
+func _drop_data(_pos: Vector2, data: Variant) -> void:
+    disable()
     drop_received.emit(data)

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://0pgxo3fupy5c" path="res://UI/Inventory/drag_drop_cell.tscn" id="2_akx53"]
 [ext_resource type="PackedScene" uid="uid://qtbc5ermv8t6" path="res://UI/Inventory/drop_overlay.tscn" id="4_xqx5g"]
 
-[node name="PlayerInventoryDialog" type="PanelContainer"]
+[node name="PlayerInventoryDialog" type="PanelContainer" node_paths=PackedStringArray("grid", "drop_overlay")]
 anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
@@ -16,6 +16,8 @@ offset_bottom = -239.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4vyah")
+grid = NodePath("VBoxContainer/GridContainer")
+drop_overlay = NodePath("DropOverlay")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -34,7 +36,6 @@ layout_mode = 2
 text = "X"
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 columns = 5
 script = ExtResource("1_2vorq")
@@ -149,4 +150,5 @@ layout_mode = 2
 layout_mode = 2
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="drop_received" from="DropOverlay" to="." method="_on_drop_overlay_drop_received"]
+[connection signal="cell_drag_ended" from="VBoxContainer/GridContainer" to="." method="_on_grid_container_cell_drag_ended"]
+[connection signal="cell_drag_started" from="VBoxContainer/GridContainer" to="." method="_on_grid_container_cell_drag_started"]

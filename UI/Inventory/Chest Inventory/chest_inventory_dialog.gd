@@ -23,7 +23,6 @@ func open(chest:TreasureChest, inventory:Inventory) -> void:
     
     for item in inventory.get_items():
         gridContainer.add_new_item(item)
-
     
     currentChest = chest
 

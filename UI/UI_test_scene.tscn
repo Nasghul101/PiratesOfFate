@@ -30,12 +30,25 @@ offset_bottom = -231.0
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 367.0
-offset_top = 47.0
-offset_right = 454.0
-offset_bottom = 78.0
+offset_left = 92.0
+offset_top = 462.0
+offset_right = 179.0
+offset_bottom = 493.0
 text = "Add Items"
 script = ExtResource("2_of3p4")
-items = Array[ExtResource("3_5jbiy")]([ExtResource("4_k3wb3"), ExtResource("5_btplp")])
+items = Array[ExtResource("3_5jbiy")]([ExtResource("4_k3wb3"), ExtResource("5_btplp"), ExtResource("4_k3wb3")])
 
+[node name="Button2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 641.0
+offset_top = 462.0
+offset_right = 728.0
+offset_bottom = 493.0
+text = "Add Items"
+script = ExtResource("2_of3p4")
+items = Array[ExtResource("3_5jbiy")]([ExtResource("4_k3wb3")])
+
+[connection signal="fill_inventory" from="Button" to="PlayerInventoryDialog" method="open"]
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
+[connection signal="fill_inventory" from="Button2" to="PlayerInventoryDialog2" method="open"]
+[connection signal="pressed" from="Button2" to="Button2" method="_on_pressed"]
